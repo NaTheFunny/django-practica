@@ -33,7 +33,14 @@
                     <td> <a href="{% url 'alumnos_del' pk=x.rut %}">Eliminar</a>
                     <td> <a href="{% url 'alumnos_findEdit' pk=x.rut %}">Modificar</a>    
                 </tr>
-            {}
+            {% endfor %}
+        {% endif %}
     </table>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $("#idMensajes").delay(2000).fadeOut("slow");
+        });
+    </script>
 </body>
 </html>

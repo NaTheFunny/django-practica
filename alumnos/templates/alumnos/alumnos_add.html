@@ -6,6 +6,15 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div style=" text-align: center;">
+        <h2>Formulario CRUD para alumnos</h2><br>
+        <form action="alumnosAdd" method="POST">
+            {% csrf_token %}
+
+            <pre>Rut:               <input type="text" name="rut"></pre>
+            <pre>Nombre:            <input type="text" name="nombre"></pre>
+            <pre>Apellido P.:               <input type="text" name="paterno"></pre>
+        </form>
+    </div>
 </body>
 </html>
