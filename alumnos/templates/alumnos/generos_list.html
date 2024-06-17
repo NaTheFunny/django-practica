@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Editar Géneros</h1>
+    <br>
+
+    <button type="button">
+        <a href="{% url 'generosAdd' %}">Agregar</a>
+    </button>
+
+    <div id="idMensajes">
+        {% if mensaje %}
+            {{mensaje}}
+        {% endif %}
+    </div>
+    <table>
+        {% if generos %}
+            <th>Genero</th>
+            <th>Eliminar</th>
+            <th>Modificar</th>
+            {% for x in generos %}
+                <tr>
+                    <td> {{ x.genero }}
+                    <td> <a href="{% url 'generos_del'  pk=x.id_genero %}">Eliminar</a>
+                    <td> <a href="{% url 'generos_edit' pk=x.id_genero %}">Modificar</a>    
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $("#idMensajes").delay(2000).fadeOut("slow");
+        });
+    </script>
+</body>
+</html>

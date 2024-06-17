@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from .models import Alumno, Genero
+from .forms import GeneroForm
+
 # Create your views here.
 
 def index(request):
@@ -13,7 +16,7 @@ def crud(request):
     return render(request, 'alumnos/alumnos_list.html', context)
 
 def alumnosAdd(request):
-    if request.method is not "POST":
+    if request.method != "POST":
         generos=Genero.objects.all()
         context={'generos':generos}
         return render(request, 'alumnos/alumnos_add.html', context)
@@ -33,7 +36,7 @@ def alumnosAdd(request):
         obj = Alumno.objects.create( rut=rut,
                                      nombre=nombre,
                                      apellido_paterno=aPaterno,
-                                     appelido_materno=aMaterno,
+                                     apellido_materno=aMaterno,
                                      fecha_nacimiento=fechaNac,
                                      id_genero=objGenero,
                                      telefono=telefono,
@@ -107,3 +110,74 @@ def alumnosUpdate(request):
         alumnos = Alumno.objects.all()
         context= {'alumnos':alumnos}
         return render(request, 'alumnos/alumnos_list.html', context)
+    
+def crud_generos(request):
+    generos=Genero.objects.all()
+    context ={'generos':generos}
+    print("enviando datos generos_list")
+    return render (request, "alumnos/generos_list.html", context)
+
+def generosAdd(request):
+    print('estoy en controlador generosAdd...')
+    context={}
+
+    if request.method == "POST":
+        print("controlador es un POST...")
+        form = GeneroForm(request.POST)
+        if form.is_valid:
+            print("estoy en agregar, is_valid")
+            form.save()
+
+            form = GeneroForm()
+
+            context={'mensaje':'Ok, datos grabados...',"form":form}
+            return render(request,"alumnos/generos_add.html",context)
+    else:
+        form = GeneroForm()
+        context={'form':form}
+        return render(request, 'alumnos/generos_add.html', context)
+def generos_del(request, pk):
+    mensajes=[]
+    errores=[]
+    generos = Genero.objects.all()
+    try:
+        genero=Genero.objects.all()
+        context={}
+        if genero:
+            genero.delete()
+            mensajes.append("Bien, datos eliminados...")
+            context = {'generos':generos, 'mensajes':mensajes, 'errores': errores}
+            return render(request, 'alumnos/generos_list.html', context)
+    except:
+        print("Error, id no existe...")
+        generos=Genero.objects.all()
+        mensaje="Error, id no existe"
+        context={'mensaje':mensaje,'generos':generos}
+        return render(request, 'alumnos/generos_list.html', context)
+def generos_edit(request, pk):
+    try:
+        genero=Genero.objects.get(id_genero=pk)
+        context=()
+        if genero:
+            print("Edit encontró el género...")
+            if request.method == "POST":
+                print("edit, es un POST")
+                form = GeneroForm(request.POST,instance=genero)
+                form.save()
+                mensaje="Bien, datos actualizados..."
+                print(mensaje)
+                context = {'genero': genero, 'form': form, 'mensaje': mensaje}
+                return render(request,'alumnos/generos_edit.html', context)
+        else:
+            print("edit, NO es un post")
+            form = GeneroForm(instance=genero)
+            mensaje=""
+            context = {'genero':genero, 'form':form, 'mensaje': mensaje}
+            return render(request,'alumnos/generos_edit.html', context)
+    except:
+        print("Error, id no existe...")
+        generos=Genero.objects.all()
+        mensaje='Error, id no existe'
+        context= {'mensaje': mensaje,'generos':generos}
+        return render(request,'alumnos/generos_list.html', context)
+
